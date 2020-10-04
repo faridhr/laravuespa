@@ -10252,7 +10252,11 @@ body {
 }
 .sb-sidenav-light .sb-sidenav-footer {
   background-color: #e9ecef;
-}@charset "UTF-8";
+}
+.modal-backdrop {
+  background-color: rgba(0,0,0,0.5) !important;
+}
+@charset "UTF-8";
 
 /*!
  * Font Awesome Free 5.15.0 by @fontawesome - https://fontawesome.com

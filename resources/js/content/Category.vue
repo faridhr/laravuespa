@@ -54,7 +54,7 @@
   // import * as categoryService from '../service/categoryservice.js';
   export default{
     name: 'category',
-    data() { 
+    data() {
       return {
         categoryData:{
           name:'',
@@ -78,7 +78,7 @@
         reader.readAsDataURL(this.categoryData.image);
       },
       createCategory: async function() {
-        let formData = new formData();
+        let formData = new FormData();
         formData.append('name', this.categoryData.name);
         formData.append('image', this.categoryData.image);
         try {

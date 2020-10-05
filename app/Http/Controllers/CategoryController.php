@@ -35,7 +35,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $this->validate($request, [
+          name: 'required|min:3',
+          image: 'required|image|mimes:jpg,png,jpeg'
+        ]);
+
     }
 
     /**

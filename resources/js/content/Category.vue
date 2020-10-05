@@ -26,19 +26,35 @@
         </table>
       </div>
     </div>
-    <b-modal ref="newModal" hide-footer title="Using Component Methods">
-      <div class="d-block text-center">
-        <h3>Category Form</h3>
-
-      </div>
+    <b-modal ref="newModal" hide-footer title="Category  Form">
+      <form v-on:submit.prevent="createCategory">
+      <!-- <form> -->
+        <div class="d-block">
+          <div class="form-group">
+            <label for="categoryName">Category Name</label>
+            <input type="text" name="categoryName" v-model="categoryData.name" class="form-control" placeholder="Category Name">
+          </div>
+          <div class="form-group">
+            <label for="Image">Image</label><br>
+            <img v-if="categoryData.image.name" width="150px" ref="imagePreview" src="">
+            <input type="file" name="image" v-on:change="attachImage" ref="categoryImage" class="form-control">
+          </div>
+        </div>
+        <hr>
+        <div class="text-right">
+          <button type="submit" class="btn btn-primary pull-right"><span class="fa fa-fw fa-check"></span> Save</button>
+        </div>
+      </form>
     </b-modal>
   </div>
 </template>
 
 <script>
+  import * as categoryService from '../service/categoryservice';
+  // import * as categoryService from '../service/categoryservice.js';
   export default{
     name: 'category',
-    data() {
+    data() { 
       return {
         categoryData:{
           name:'',
@@ -49,6 +65,28 @@
     methods: {
       showmodal() {
         this.$refs.newModal.show();
+      },
+      hideModal() {
+        this.$refs.newModal.hide();
+      },
+      attachImage(){
+        this.categoryData.image = this.$refs.categoryImage.files[0];
+        let reader = new FileReader();
+        reader.addEventListener('load', function(){
+          this.$refs.imagePreview.src = reader.result;
+        }.bind(this), false);
+        reader.readAsDataURL(this.categoryData.image);
+      },
+      createCategory: async function() {
+        let formData = new formData();
+        formData.append('name', this.categoryData.name);
+        formData.append('image', this.categoryData.image);
+        try {
+          const response = await categoryService.categoryPost(formData);
+          console.log(response);
+        } catch (error){
+          alert(error);
+        }
       }
     }
   }

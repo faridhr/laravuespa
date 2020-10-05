@@ -1,14 +1,13 @@
 import Vue from 'vue';
-import VueX from 'vuex';
+import Vuex from 'vuex';
 
+Vue.use(Vuex);
 
-Vue.use(VueX);
-
-export default new VueX.store({
+export default new Vuex.store({
   state: {
     apiURL: 'http://localhost:8000/api',
     serverPath: 'http://localhost:8000'
   },
   mutations: {},
   actions: {}
-})
+});

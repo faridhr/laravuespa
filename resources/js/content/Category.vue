@@ -6,7 +6,9 @@
     </ol>
     <div class="row">
       <div class="col-lg-12">
-        <button type="button" class="btn btn-primary" v-on:click="showmodal"><i class="fa fa-fw fa-eye"/> Show Modal</button>
+        <div align="right">
+          <button type="button" class="btn btn-primary" v-on:click="showmodal"><i class="fa fa-fw fa-eye"/> Show Modal</button>
+        </div> <br>
         <table class="table table-bordered">
           <thead>
             <td>No.</td>

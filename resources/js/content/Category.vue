@@ -33,9 +33,6 @@
             <label for="categoryName">Category Name</label>
             <input type="text" name="categoryName" v-model="categoryData.name" class="form-control" placeholder="Category Name">
             <div class="invalid-feedback" v-if="errors.name">{{ errors.name[0] }}</div>
-            <!-- <div v-if="errors.name">
-              {{ errors.name }}
-            </div> -->
           </div>
           <div class="form-group">
             <label for="Image">Image</label><br>
@@ -69,6 +66,9 @@
     },
     methods: {
       showmodal() {
+        this.categoryData.name = '';
+        this.categoryData.image = '';
+        // console.log(this);
         this.$refs.newModal.show();
       },
       hideModal() {
@@ -89,7 +89,7 @@
         try {
           const response = await categoryService.categoryPost(formData);
           this.hideModal();
-          this.flash('Data saved', 'success');
+          this.$swal.fire('Good job!','You clicked the button!','success');
         } catch (error){
           switch (error.response.status) {
             case 422:
@@ -97,9 +97,6 @@
               break;
             default:
               this.hideModal();
-              this.flash('Oops..!! Something went wrong', 'error', {
-                timeout: 3000
-              });
               break;
           }
         }

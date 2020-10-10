@@ -28,16 +28,20 @@
     </div>
     <b-modal ref="newModal" hide-footer title="Category  Form">
       <form v-on:submit.prevent="createCategory">
-      <!-- <form> -->
         <div class="d-block">
           <div class="form-group">
             <label for="categoryName">Category Name</label>
             <input type="text" name="categoryName" v-model="categoryData.name" class="form-control" placeholder="Category Name">
+            <div class="invalid-feedback" v-if="errors.name">{{ errors.name[0] }}</div>
+            <!-- <div v-if="errors.name">
+              {{ errors.name }}
+            </div> -->
           </div>
           <div class="form-group">
             <label for="Image">Image</label><br>
             <img v-if="categoryData.image.name" width="150px" ref="imagePreview" src="">
             <input type="file" name="image" v-on:change="attachImage" ref="categoryImage" class="form-control">
+            <div class="invalid-feedback" v-if="errors.image">{{ errors.image[0] }}</div>
           </div>
         </div>
         <hr>
@@ -59,7 +63,8 @@
         categoryData:{
           name:'',
           image:''
-        }
+        },
+        errors: {}
       }
     },
     methods: {
@@ -83,9 +88,20 @@
         formData.append('image', this.categoryData.image);
         try {
           const response = await categoryService.categoryPost(formData);
-          console.log(response);
+          this.hideModal();
+          this.flash('Data saved', 'success');
         } catch (error){
-          alert(error);
+          switch (error.response.status) {
+            case 422:
+              this.errors = error.response.data.errors;
+              break;
+            default:
+              this.hideModal();
+              this.flash('Oops..!! Something went wrong', 'error', {
+                timeout: 3000
+              });
+              break;
+          }
         }
       }
     }

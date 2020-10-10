@@ -8,6 +8,7 @@
             <footer />
         </div>
     </div>
+    <flash-message position="right bottom"></flash-message>
   </main>
 </template>
 <script>

@@ -13,12 +13,16 @@
           <thead>
             <td>No.</td>
             <td>Category</td>
+            <td>Images</td>
             <td>Actions</td>
           </thead>
           <tbody>
-            <tr>
-              <td>1.</td>
-              <td>Category 1</td>
+            <tr v-for="(category, index) in categories" :key="index">
+              <td>{{ index + 1 }}</td>
+              <td>{{ category.name }}</td>
+              <td>
+                <img :src="`${$store.state.serverPath}/${category.images}`" alt="category.name">
+              </td>
               <td>
                 <button type="button" class="btn btn-warning"><i class="fa fa-fw fa-edit"/> Edit</button>
                 <button type="button" class="btn btn-danger"><i class="fa fa-fw fa-trash"/> Delete</button>
@@ -59,6 +63,7 @@
     name: 'category',
     data() {
       return {
+        categories : [],
         categoryData:{
           name:'',
           image:''
@@ -66,7 +71,24 @@
         errors: {}
       }
     },
+    mounted(){
+      this.getCategory();
+    },
     methods: {
+      getCategory : async function(){
+        try{
+          const response = await categoryService.getPost();
+          console.log(response);
+          this.categories = response.data.data;
+          console.log(this.categories);
+        }catch(error){
+          this.$swal.fire({
+                icon : 'error',
+                title : 'Oops...',
+                text : 'something wen\'t wrong, \n Please refresh this pages'
+              });
+        }
+      },
       showmodal() {
         this.categoryData.name = '';
         this.categoryData.image = '';
@@ -99,6 +121,11 @@
               break;
             default:
               this.hideModal();
+              this.$swal.fire({
+                icon : 'error',
+                title : 'Oops...',
+                text : 'something wen\'t wrong'
+              });
               break;
           }
         }

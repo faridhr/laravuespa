@@ -7,3 +7,7 @@ export function categoryPost(data) {
 export function getPost() {
 	return http().get('/categories');
 };
+
+export function deleteCategory(id) {
+	return  http().delete('/categories/' + id);
+}

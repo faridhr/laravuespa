@@ -21,11 +21,11 @@
               <td>{{ index + 1 }}</td>
               <td>{{ category.name }}</td>
               <td>
-                <img :src="`${$store.state.serverPath}/${category.images}`" alt="category.name">
+                  <img style="height: 150px" :src="`${$store.state.serverPath}/storage/${category.images}`" alt="category.name">
               </td>
               <td>
                 <button type="button" class="btn btn-warning"><i class="fa fa-fw fa-edit"/> Edit</button>
-                <button type="button" class="btn btn-danger"><i class="fa fa-fw fa-trash"/> Delete</button>
+                <button type="button" v-on:click="deleteConfirm(category)" class="btn btn-danger"><i class="fa fa-fw fa-trash"/> Delete</button>
               </td>
             </tr>
           </tbody>
@@ -78,9 +78,7 @@
       getCategory : async function(){
         try{
           const response = await categoryService.getPost();
-          console.log(response);
           this.categories = response.data.data;
-          console.log(this.categories);
         }catch(error){
           this.$swal.fire({
                 icon : 'error',
@@ -92,7 +90,6 @@
       showmodal() {
         this.categoryData.name = '';
         this.categoryData.image = '';
-        // console.log(this);
         this.$refs.newModal.show();
       },
       hideModal() {
@@ -112,6 +109,7 @@
         formData.append('image', this.categoryData.image);
         try {
           const response = await categoryService.categoryPost(formData);
+          this.categories.unshift(response.data);
           this.hideModal();
           this.$swal.fire('Good job!','You clicked the button!','success');
         } catch (error){
@@ -128,6 +126,31 @@
               });
               break;
           }
+        }
+      },
+      deleteConfirm(category){
+        this.$swal.fire({
+          title: 'Are you sure?',
+          text: "Are you sure delete " + category.name,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.deleteCategory(category);
+          };
+        });
+      },
+      deleteCategory: async function(category){
+        try {
+          await categoryService.deleteCategory(category.id);
+          this.categories = this.categories.filter(obj => {
+            return obj.id != category.id;
+          });
+        } catch (e) {
+          console.log(e);
         }
       }
     }

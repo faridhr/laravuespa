@@ -21,7 +21,8 @@
               <td>{{ index + 1 }}</td>
               <td>{{ category.name }}</td>
               <td>
-                  <img style="height: 150px" :src="`${$store.state.serverPath}/storage/${category.images}`" alt="category.name">
+                  <!-- <img style="height: 150px" :src="`${$store.state.serverPath}/storage/app/public/${category.images}`"> -->
+                  <img style="width: 200px;" :src="`${$store.state.serverPath}/storage/${category.images}`" :alt="category.name">
               </td>
               <td>
                 <button type="button" class="btn btn-warning"><i class="fa fa-fw fa-edit"/> Edit</button>

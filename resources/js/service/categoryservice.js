@@ -9,5 +9,5 @@ export function getPost() {
 };
 
 export function deleteCategory(id) {
-	return  http().delete('/categories/' + id);
-}
+	return http().delete('/categories/' + id);
+};

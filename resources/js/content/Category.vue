@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div align="right">
-          <button type="button" class="btn btn-primary" v-on:click="showmodal"><i class="fa fa-fw fa-eye"/> Show Modal</button>
+          <button type="button" class="btn btn-primary" v-on:click="showmodal"><i class="fa fa-fw fa-eye"/> New Category</button>
         </div> <br>
         <table class="table table-bordered">
           <thead>
@@ -21,11 +21,10 @@
               <td>{{ index + 1 }}</td>
               <td>{{ category.name }}</td>
               <td>
-                  <!-- <img style="height: 150px" :src="`${$store.state.serverPath}/storage/app/public/${category.images}`"> -->
                   <img style="width: 200px;" :src="`${$store.state.serverPath}/storage/${category.images}`" :alt="category.name">
               </td>
               <td>
-                <button type="button" class="btn btn-warning"><i class="fa fa-fw fa-edit"/> Edit</button>
+                <button type="button" v-on:click="editCategory(category)" class="btn btn-warning"><i class="fa fa-fw fa-edit"/> Edit</button>
                 <button type="button" v-on:click="deleteConfirm(category)" class="btn btn-danger"><i class="fa fa-fw fa-trash"/> Delete</button>
               </td>
             </tr>
@@ -33,7 +32,7 @@
         </table>
       </div>
     </div>
-    <b-modal ref="newModal" hide-footer title="Category  Form">
+    <b-modal ref="newModal" hide-footer title="Category Form">
       <form v-on:submit.prevent="createCategory">
         <div class="d-block">
           <div class="form-group">
@@ -61,7 +60,7 @@
   import * as categoryService from '../service/categoryservice';
   // import * as categoryService from '../service/categoryservice.js';
   export default{
-    name: 'category',
+    name: 'Category',
     data() {
       return {
         categories : [],
@@ -69,7 +68,8 @@
           name:'',
           image:''
         },
-        errors: {}
+        errors: {},
+        categoryEditData:{}
       }
     },
     mounted(){
@@ -123,7 +123,7 @@
               this.$swal.fire({
                 icon : 'error',
                 title : 'Oops...',
-                text : 'something wen\'t wrong'
+                text : error.response.data.message
               });
               break;
           }
@@ -146,12 +146,28 @@
       },
       deleteCategory: async function(category){
         try {
-          await categoryService.deleteCategory(category.id);
+          const delData = await categoryService.deleteCategory(category.id);
+          this.$swal.fire(
+            'Deleted!',
+            delData.data.message,
+            'success'
+          );
           this.categories = this.categories.filter(obj => {
             return obj.id != category.id;
           });
         } catch (e) {
-          console.log(e);
+          this.$swal.fire({
+            icon : 'error',
+            title : 'Oops...',
+            text : e.response.data.message
+          });
+        }
+      },
+      editCategory: async function(category){
+        try{
+          this.categoryEditData =  category;
+        }catch(error){
+
         }
       }
     }
